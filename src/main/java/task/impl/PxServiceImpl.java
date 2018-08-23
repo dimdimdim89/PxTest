@@ -27,7 +27,7 @@ public class PxServiceImpl implements PxService<Object, LocalDateTime, Callable<
     @Override
     public Future<Object> submit(Tuple2<LocalDateTime, Callable<Object>> task) {
         long delay = LocalDateTime.now().atZone(zone).toEpochSecond() - task.left.atZone(zone).toEpochSecond();
-        return executorService.schedule(task.right, Math.abs(delay), SECONDS);
+        return executorService.schedule(task.right, delay >= 0 ? 0 : -delay, SECONDS);
     }
 
     public static PxService<Object, LocalDateTime, Callable<Object>> getInstance() {
